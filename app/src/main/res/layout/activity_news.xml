@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="jafar.top.maildemo.activities.NewsActivity">
+
+
+    <fragment
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:id="@+id/left_fragment"
+        android:name="jafar.top.maildemo.fragments.LeftFragment"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="0dp" />
+    
+    <FrameLayout
+        android:id="@+id/right_layout"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="0dp">
+        <fragment
+            android:id="@+id/right_fragment"
+            android:name="jafar.top.maildemo.fragments.RightFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0"
+            tools:layout_editor_absoluteY="0" />
+    </FrameLayout>
+
+
+
+</android.support.constraint.ConstraintLayout>

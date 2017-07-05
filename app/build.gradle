@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+// add after applying plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+// In your app projects build.gradle file:
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "jafar.top.maildemo"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    // add library
+    // https://mvnrepository.com/artifact/junit/junit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // apt command comes from the android-apt plugin
+
+    // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.6'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.0'
+//    // https://mvnrepository.com/artifact/org.slf4j/slf4j-jdk14
+//    compile group: 'org.slf4j', name: 'slf4j-jdk14', version: '1.7.25'
+    // https://mvnrepository.com/artifact/org.subethamail/subethasmtp
+//    compile group: 'org.subethamail', name: 'subethasmtp', version: '3.1.7'
+    // https://mvnrepository.com/artifact/org.powermock/powermock-module-junit4
+//    compile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
+//    // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito
+//    compile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
+//    // https://mvnrepository.com/artifact/org.easymock/easymock
+
+    //    compile group: 'org.easymock', name: 'easymock', version: '3.4'
+
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.greenrobot:greendao-generator:3.2.2'
+    compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.google.dagger:dagger:2.4'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    // https://mvnrepository.com/artifact/com.google.zxing/android-core
+    compile group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
+    // https://mvnrepository.com/artifact/com.google.zxing/zxing-parent
+    compile group: 'com.google.zxing', name: 'zxing-parent', version: '3.3.0'
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    compile group: 'com.google.zxing', name: 'core', version: '3.3.0'
+
+    compile ('io.socket:socket.io-client:0.8.3') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+
+    apt 'com.google.dagger:dagger-compiler:2.4'
+
+}
+
+greendao {
+    schemaVersion 3
+    daoPackage 'jafar.top.maildemo.greendao'
+    targetGenDir 'src/main/java'
+}

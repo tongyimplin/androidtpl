@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="pingNormal">#33CC00</color>
+    <color name="pingWarning">#FFCC33</color>
+    <color name="pingDanger">#FF0033</color>
 </resources>

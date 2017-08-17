@@ -60,6 +60,7 @@ public class MainActivity extends AbstractActivity {
 
     private ImageView imageView;
     private TextView editText;
+    private TextView pingText;
 
     private UserDao userDao;
     private TeacherDao teacherDao;
@@ -77,6 +78,7 @@ public class MainActivity extends AbstractActivity {
         triggerBtn = $(R.id.trigger_evt);
         editText = $(R.id.edit_text);
         imageView = $(R.id.imageView);
+        pingText = $(R.id.ping_txt);
 
 //        editText.setEnabled(false);
         editText.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -125,7 +127,8 @@ public class MainActivity extends AbstractActivity {
         switch (v.getId()) {
             case R.id.save_btn:
 //                saveHandler();
-                disconnectToSocket();
+//                disconnectToSocket();
+                pingText.setText("300ms");
                 break;
             case R.id.fetch_btn:
 //                fetchBtn();

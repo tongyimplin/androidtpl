@@ -1,4 +1,4 @@
-package top.jafar;
+package top.jafar.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -7,12 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by jafar.tang on 2017/8/24.
+ * Created by jafar.new on 2017-9-7.
  */
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface PosSocketAutowired {
-
+public @interface PosSocketController {
 }

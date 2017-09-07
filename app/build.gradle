@@ -1,3 +1,4 @@
+
 apply plugin: 'com.android.application'
 // add after applying plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'

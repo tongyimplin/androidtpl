@@ -17,6 +17,9 @@ allprojects {
 //        maven { url 'http://nexus.cd-huashan.com:8081/nexus/content/groups/public/' }
         jcenter()
     }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
 }
 task clean(type: Delete) {
     delete rootProject.buildDir

@@ -4,6 +4,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'commons-lang:commons-lang:2.6'
 }
 
 sourceCompatibility = "1.7"

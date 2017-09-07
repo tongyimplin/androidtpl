@@ -1,5 +1,9 @@
 package top.jafar;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by jafar.tang on 2017/8/24.
@@ -61,8 +66,16 @@ public class PosSocketClient implements Runnable {
         }
     }
 
+    /**
+     * 默认处理消息任务
+     * @return
+     */
     private PosSocketClientCallback getDefaultCallback() {
-        final String pathScope = this.getClass().getPackage().getName();
+        // 获取默认配置的目录
+        final String configPathScope = PosSocketBeanUtils.getConfig("PATH_SCOPE");
+        // 默认使用当前包的目录
+        final String pathScope = configPathScope == null ? this.getClass().getPackage().getName()+".emitters" : configPathScope;
+
         return new PosSocketClientCallback() {
             @Override
             public void readLine(String msg, PosSocketClient client) {
@@ -74,7 +87,7 @@ public class PosSocketClient implements Runnable {
                     for (int i=2; i<commands.length; i++) {
                         params[i-2] = commands[i];
                     }
-                    String emitterPath = pathScope+".emitters."+emitterName+"Emitter";
+                    String emitterPath = pathScope+"."+ StringUtils.capitalize(emitterName)+"Emitter";
                     Object instance = INSTANCE_CONATINER.get(emitterName);
                     synchronized (PosSocketClient.class) {
                         if(instance == null) {
@@ -82,25 +95,28 @@ public class PosSocketClient implements Runnable {
                             //重新初始化
                             instance = clazz.newInstance();
                             PosSocketLogger.println("初始化"+emitterPath+": "+instance);
+                            String clazzKey = clazz.getName();
+                            instance = PosSocketBeanUtils.getBean(clazzKey);
                             //是否需要注入
-                            Field[] declaredFields = clazz.getDeclaredFields();
-                            Field field = null;
-                            for (int i=0; i< declaredFields.length; i++) {
-                                Field tField = declaredFields[i];
-                                Class<?> tFieldType = tField.getType();
-                                String tFieldTypeSimpleName = tFieldType.getSimpleName();
-                                if(tFieldTypeSimpleName.equals("PosSocketPool")) {
-                                    field = tField;
-                                    break;
-                                }
-                            }
-                            if(field != null) {
-                                field.setAccessible(true);
-                                field.set(instance, posSocketPool);
-                            }
+//                            Field[] declaredFields = clazz.getDeclaredFields();
+//                            Field field = null;
+//                            for (int i=0; i< declaredFields.length; i++) {
+//                                Field tField = declaredFields[i];
+//                                Class<?> tFieldType = tField.getType();
+//                                String tFieldTypeSimpleName = tFieldType.getSimpleName();
+//                                if(tFieldTypeSimpleName.equals("PosSocketPool")) {
+//                                    field = tField;
+//                                    break;
+//                                }
+//                            }
+//                            if(field != null) {
+//                                field.setAccessible(true);
+//                                field.set(instance, posSocketPool);
+//                            }
                             INSTANCE_CONATINER.put(emitterName, instance);
                         }
                     }
+                    //获取需要调用的方法
                     Method[] methods = instance.getClass().getMethods();
                     Method method = null;
                     Object convertedParams[] = null;

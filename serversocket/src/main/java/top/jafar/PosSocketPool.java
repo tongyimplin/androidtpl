@@ -1,5 +1,8 @@
 package top.jafar;
 
+import org.apache.commons.lang.reflect.MethodUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -16,15 +19,31 @@ public class PosSocketPool implements Runnable {
      * socketclient缓存池
      */
     private static final Map<String, PosSocketClient> POS_SOCKET_POOL = new HashMap<>();
+    // 注入对象池
+    private static final Map<String, Object> INJECTION_OBJECT_POOL = new HashMap<>();
     private ServerSocket serverSocket = null;
-    private static final int SERVER_PORT = 8990;
+    private static int SERVER_PORT = 8990;
 
     /**
      * 初始化缓存池
      * @return
      */
     public static PosSocketPool initPool() { synchronized (PosSocketPool.class) {
+        //获取配置中的port
+        try {
+            String server_port = PosSocketBeanUtils.getConfig("SERVER_PORT");
+            SERVER_PORT = Integer.parseInt(server_port);
+        }catch (Exception e) {
+
+        }
         PosSocketPool posSocketPool = new PosSocketPool();
+        PosSocketBeanUtils.registerBean(posSocketPool.getClass().getName(), posSocketPool);
+        try {
+//            PosSocketLogger.println("初始化参数: "+args.length);
+//            MethodUtils.invokeMethod(posSocketPool, "registerBeans", args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         new Thread(posSocketPool).start();
         return posSocketPool;
     } }
@@ -34,6 +53,7 @@ public class PosSocketPool implements Runnable {
         //执行清理socket的任务
         PosSocketClearSchedule.startSchedule(POS_SOCKET_POOL);
     }
+
 
     /**
      * 获取单个socket

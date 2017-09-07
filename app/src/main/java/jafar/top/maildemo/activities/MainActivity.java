@@ -39,6 +39,11 @@ import jafar.top.maildemo.server.HttpServer;
 import jafar.top.maildemo.service.SocketIOService;
 import jafar.top.maildemo.util.NetworkUtil;
 import jafar.top.maildemo.util.NetworkUtilCallback;
+import top.jafar.PosSockectLoggerCallbackAbs;
+import top.jafar.PosSocketBeanUtils;
+import top.jafar.PosSocketException;
+import top.jafar.PosSocketLogger;
+import top.jafar.PosSocketPool;
 
 
 public class MainActivity extends AbstractActivity {
@@ -73,11 +78,20 @@ public class MainActivity extends AbstractActivity {
         PosSocketLogger.setLoggerCallback(new PosSockectLoggerCallbackAbs() {
             @Override
             protected void doLog(String msg) {
-                Log.i("PosSocket", msg);
+            Log.i("PosSocket", msg);
             }
         });
-
+        try {
+            //注册emitter需要注入的实例
+            PosSocketBeanUtils.registerBean("saveBtn", saveBtn);
+            //设置Emitters的目录,在该目录的emitter目录下
+            PosSocketBeanUtils.setConfig("PATH_SCOPE", "jafar.top.maildemo.socket.emitter");
+            PosSocketBeanUtils.setConfig("SERVER_PORT", "8993");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         final PosSocketPool posSocketPool = PosSocketPool.initPool();
+
 
 
 

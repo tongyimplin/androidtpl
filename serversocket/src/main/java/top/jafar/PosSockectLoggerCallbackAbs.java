@@ -1,5 +1,7 @@
 package top.jafar;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,7 +11,9 @@ import java.util.Date;
  */
 
 public abstract class PosSockectLoggerCallbackAbs implements PosSocketLoggerCallback {
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private static final String dateFormatStr = "yyyy-MM-dd HH:mm:ss.SSS";
+
 
     private boolean needFormatDate = false;
 
@@ -21,7 +25,7 @@ public abstract class PosSockectLoggerCallbackAbs implements PosSocketLoggerCall
      */
     public void println(String msg) {
         if(needFormatDate) {
-            doLog("["+dateFormat.format(new Date())+"] "+msg);
+            doLog("["+ DateFormatUtils.format(new Date(), dateFormatStr)+"] "+msg);
         }else{
             doLog(msg);
         }

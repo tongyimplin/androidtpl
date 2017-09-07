@@ -1,7 +1,15 @@
 [
     {
+        "merged": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
         "merged": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_horizontal.xml",
         "source": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_vertical.xml"
     },
     {
         "merged": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",

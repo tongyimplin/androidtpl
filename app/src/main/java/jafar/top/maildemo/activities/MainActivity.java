@@ -5,18 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,24 +26,19 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Random;
 
 
 import jafar.top.maildemo.R;
-import jafar.top.maildemo.entities.User;
 import jafar.top.maildemo.events.MessageEvent;
 import jafar.top.maildemo.greendao.DaoSession;
 import jafar.top.maildemo.greendao.TeacherDao;
 import jafar.top.maildemo.greendao.UserDao;
 import jafar.top.maildemo.server.HttpServer;
 import jafar.top.maildemo.service.SocketIOService;
+import jafar.top.maildemo.util.NetworkUtil;
+import jafar.top.maildemo.util.NetworkUtilCallback;
 
 
 public class MainActivity extends AbstractActivity {
@@ -66,54 +57,76 @@ public class MainActivity extends AbstractActivity {
     private TeacherDao teacherDao;
     private StringBuffer consoleStr = new StringBuffer();
     private boolean isServerStarted = false;
-    private HttpServer server = new HttpServer(MainActivity.this);;
+    private HttpServer server = new HttpServer(MainActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        saveBtn = $(R.id.save_btn);
-        fetchBtn = $(R.id.fetch_btn);
-        triggerBtn = $(R.id.trigger_evt);
-        editText = $(R.id.edit_text);
-        imageView = $(R.id.imageView);
         pingText = $(R.id.ping_txt);
+        saveBtn = $(R.id.button3);
 
-//        editText.setEnabled(false);
-        editText.setMovementMethod(ScrollingMovementMethod.getInstance());
-        setOnClickListener(saveBtn, fetchBtn, triggerBtn);
-        //自动显示最新的文本
-        editText.addTextChangedListener(new TextWatcher() {
+        setOnClickListener(saveBtn);
+
+        //先设置logger
+        PosSocketLogger.setLoggerCallback(new PosSockectLoggerCallbackAbs() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int maxLine = 28;
-                if(editText.getLineCount() > maxLine) {
-                    int totalHeight = (editText.getLineCount() - (maxLine-1)) * editText.getLineHeight();
-                    editText.scrollTo(0, totalHeight);
-                }
+            protected void doLog(String msg) {
+                Log.i("PosSocket", msg);
             }
         });
 
+        final PosSocketPool posSocketPool = PosSocketPool.initPool();
+
+
+
+
+//        saveBtn = $(R.id.save_btn);
+//        fetchBtn = $(R.id.fetch_btn);
+//        triggerBtn = $(R.id.trigger_evt);
+//        editText = $(R.id.edit_text);
+//        imageView = $(R.id.imageView);
+//        pingText = $(R.id.ping_txt);
+
+//        editText.setEnabled(false);
+//        editText.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        setOnClickListener(saveBtn, fetchBtn, triggerBtn);
+        //自动显示最新的文本
+//        editText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                int maxLine = 28;
+//                if(editText.getLineCount() > maxLine) {
+//                    int totalHeight = (editText.getLineCount() - (maxLine-1)) * editText.getLineHeight();
+//                    editText.scrollTo(0, totalHeight);
+//                }
+//            }
+//        });
+//
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
                 switch (msg.what) {
                     case 1:
-                        showMsg(msg.getData().getString("msg"));
+                        String msg1 = data.getString("msg");
+                        int color = data.getInt("color");
+//                        NetworkUtilCallback.DELAY_GRADE grade = (NetworkUtilCallback.DELAY_GRADE) data.get("grade");
+                        showMsg(msg1, color);
                         break;
                     case 2:
-                        String url = msg.getData().getString("url");
+                        String url = data.getString("url");
                         createQRImage(url);
                         break;
                 }
@@ -125,19 +138,45 @@ public class MainActivity extends AbstractActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.save_btn:
+            case R.id.button3:
 //                saveHandler();
 //                disconnectToSocket();
-                pingText.setText("300ms");
+//                sendHandlerMsg("32ms");
+                final NetworkUtil networkUtil = new NetworkUtil(new NetworkUtilCallback() {
+                    @Override
+                    public void sendMsFromPing(String ms, DELAY_GRADE grade) {
+//                        sendHandlerMsg(ms);
+                        Message message = new Message();
+                        message.what = 1;
+                        int color = Color.GREEN;
+                        if(grade == DELAY_GRADE.WARNING) {
+                            color = Color.YELLOW;
+                        }else if(grade == DELAY_GRADE.DANGER) {
+                            color = Color.RED;
+                        }
+                        bundle = new Bundle();
+                        bundle.putString("msg", ms);
+                        bundle.putInt("color", color);
+                        message.setData(bundle);
+                        handler.sendMessage(message);
+                    }
+                });
+                new Thread(networkUtil).start();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        networkUtil.startWork();
+                    }
+                }).start();
                 break;
-            case R.id.fetch_btn:
-//                fetchBtn();
-                sendPing();
-                break;
-            case R.id.trigger_evt:
-//                triggerEvent();
-                connectToSocket();
-                break;
+//            case R.id.fetch_btn:
+////                fetchBtn();
+//                sendPing();
+//                break;
+//            case R.id.trigger_evt:
+////                triggerEvent();
+//                connectToSocket();
+//                break;
         }
     }
     private boolean isBind = false;
@@ -173,13 +212,26 @@ public class MainActivity extends AbstractActivity {
         showMsg("发送测试信息");
     }
 
+    public void sendHandlerMsg(final String msg) {
+        sendHandlerMessage(1, new HashMap<String, String> (){{
+            put("msg", msg);
+        }});
+    }
+
     private void showMsg(String msg) {
-        consoleStr
-                .append("[")
-                .append(new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()))
-                .append("] ")
-                .append(msg).append("\r\n");
-        editText.setText(consoleStr.toString());
+
+    }
+
+    private void showMsg(String msg, int color) {
+//        consoleStr
+//                .append("[")
+//                .append(new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()))
+//                .append("] ")
+//                .append(msg).append("\r\n");
+//        editText.setText(consoleStr.toString());
+
+        pingText.setTextColor(color);
+        pingText.setText(msg);
     }
 
     private void triggerEvent() {

@@ -1,15 +1,19 @@
-package com.test.utils;
+package jafar.top.maildemo.util;
+
+import android.app.Activity;
+import android.util.Log;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class NetworkUtil implements Runnable {
     private NetworkUtilCallback callback;
@@ -26,14 +30,14 @@ public class NetworkUtil implements Runnable {
     /**
      * 延时权重数组
      */
-    private int timeDelayArray[] = new int[30];
+    private int timeDelayArray[] = new int[20];
     /**
      * 上一次的权重延时
      */
     private int lastAvgMs = 0;
     private boolean isFirst = true;
 
-    public NetworkUtil(NetworkUtilCallback callback) {
+    public NetworkUtil( NetworkUtilCallback callback) {
         this.callback = callback;
         for(int i=0; i< timeDelayArray.length; i++) {
             timeDelayArray[i] = TIME_OUT_VALUE;
@@ -54,7 +58,7 @@ public class NetworkUtil implements Runnable {
 
     public void startWork() {
 //        String command = "ping -t www.yingqianpos.com";
-        String command = "ping -t kmbk.xiaozhuzhu.top";
+        String command = "ping kmbk.xiaozhuzhu.top";
         Runtime runtime = Runtime.getRuntime();
         BufferedReader reader = null;
         try {
@@ -63,6 +67,7 @@ public class NetworkUtil implements Runnable {
             String line = null;
             while((line = reader.readLine()) != null) {
                 String msFromPing = getMsFromPing(line);
+                Log.d("NetworkUtil", line);
                 if(msFromPing != null) {
                     timeOutCount = 0;
                     appendDelayMs(msFromPing);
@@ -88,7 +93,8 @@ public class NetworkUtil implements Runnable {
     private void appendDelayMs(String ms) {
         int delayMs = TIME_OUT_VALUE;
         try{
-            delayMs = Integer.parseInt(ms.replace("ms", ""));
+            float delayMsFloat = Float.parseFloat(ms.replace("ms", "").trim());
+            delayMs = (int) delayMsFloat;
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,7 +110,7 @@ public class NetworkUtil implements Runnable {
 
         int avgMs = getAvgDelayMs(timeDelayArray);
         NetworkUtilCallback.DELAY_GRADE delayGrade = getDelayGrade(avgMs);
-        callback.sendMsFromPing(avgMs+"", delayGrade);
+        callback.sendMsFromPing(avgMs+"ms", delayGrade);
     }
 
     /**
@@ -161,14 +167,3 @@ public class NetworkUtil implements Runnable {
     }
 }
 
-interface NetworkUtilCallback {
-    static enum DELAY_GRADE {
-        // 正常
-        NORMAL,
-        // 中等
-        WARNING,
-        // 严重
-        DANGER
-    }
-    void sendMsFromPing(String ms, DELAY_GRADE grade);
-}

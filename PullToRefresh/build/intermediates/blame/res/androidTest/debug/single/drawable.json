@@ -1,7 +1,15 @@
 [
     {
+        "merged": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_bottom.xml",
+        "source": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_bottom.xml"
+    },
+    {
         "merged": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_top.xml",
         "source": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_top.xml"
+    },
+    {
+        "merged": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_top.xml",
+        "source": "F:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\bundles\\debug\\res\\drawable\\indicator_bg_top.xml"
     },
     {
         "merged": "E:\\jafar\\workspace\\android\\MailDemo\\PullToRefresh\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\indicator_bg_bottom.xml",
